@@ -7,6 +7,7 @@ export default {
 			return await _handle(request, env, ctx);
 		} catch (err) {
 			console.error('Unhandled error:', err);
+			console.error('stack:', err.stack);
 			return new Response(err.message, { status: 500 });
 		}
 	},

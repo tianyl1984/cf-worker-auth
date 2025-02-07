@@ -11,7 +11,7 @@ async function handle(req, env, ctx) {
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>GitHub 登录</title>
+		<title>登录</title>
 		<style>
 			body {
 				display: flex;
