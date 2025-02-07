@@ -52,6 +52,7 @@ async function _getUserInfo(env, accessToken) {
 	return (await fetch('https://api.github.com/user', {
 		method: 'GET',
 		headers: {
+			'Accept': 'application/json',
 			'Content-Type': 'application/json',
 			'Authorization': `token ${accessToken}`
 		}
@@ -62,6 +63,7 @@ async function _getAccessToken(env, code, redirectUri) {
 	return (await fetch('https://github.com/login/oauth/access_token', {
 		method: 'POST',
 		headers: {
+			'Accept': 'application/json',
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify({
