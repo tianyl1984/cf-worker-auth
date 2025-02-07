@@ -10,13 +10,18 @@ async function handle(req, env, ctx) {
 	console.log(tokenJson);
 	// 获取登录用户信息
 	const userinfo = await _getUserInfo(env, tokenJson.access_token);
+	console.log(userinfo);
 	// 校验用户 && 保存登录信息
 	await _checkLoginUser(env, userinfo);
+	console.log('11111');
 	const token = util.genUUID();
+	console.log(token);
 	await _saveToken(env, token, userinfo);
+	console.log('222222');
 	// 重定向回client
 	let jumpUrl = `https://${url.host}/`;
 	const cb = await _getCallback(env, state);
+	console.log(cb);
 	if (cb == null) {
 		console.log('没有回调，返回首页');
 	} else {
