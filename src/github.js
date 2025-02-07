@@ -9,6 +9,7 @@ async function handle(req, env, ctx) {
 	const tokenJson = await _getAccessToken(env, code, redirectUri);
 	console.log(tokenJson);
 	// 获取登录用户信息
+	console.log(tokenJson.access_token);
 	const userinfo = await _getUserInfo(env, tokenJson.access_token);
 	console.log(userinfo);
 	// 校验用户 && 保存登录信息
@@ -54,11 +55,11 @@ async function _checkLoginUser(env, userinfo) {
 }
 
 async function _getUserInfo(env, accessToken) {
+	console.log(accessToken);
 	return (await fetch('https://api.github.com/user', {
 		method: 'GET',
 		headers: {
 			'Accept': 'application/json',
-			'Content-Type': 'application/json',
 			'Authorization': `token ${accessToken}`
 		}
 	})).json();
