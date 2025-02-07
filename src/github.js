@@ -56,13 +56,16 @@ async function _checkLoginUser(env, userinfo) {
 
 async function _getUserInfo(env, accessToken) {
 	console.log(accessToken);
-	return (await fetch('https://api.github.com/user', {
+	const resp = await fetch('https://api.github.com/user', {
 		method: 'GET',
 		headers: {
 			'Accept': 'application/json',
 			'Authorization': `token ${accessToken}`
 		}
-	})).json();
+	});
+	const text = await resp.text();
+	console.log(text);
+	return JSON.parse(text);
 }
 
 async function _getAccessToken(env, code, redirectUri) {
