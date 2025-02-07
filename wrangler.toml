@@ -23,8 +23,9 @@ compatibility_date = "2025-01-09"
 # - https://developers.cloudflare.com/workers/configuration/secrets/
 # [vars]
 # MY_VARIABLE = "production_value"
-# [env.dev.vars]
-# GITHUB_TOKEN="ghp_xxxx"
+[env.dev.vars]
+GITHUB_CLIENT_ID="xxx"
+GITHUB_CLIENT_SECRET="xxxxxxx"
 
 
 # Bind the Workers AI model catalog. Run machine learning models, powered by serverless GPUs, on Cloudflare’s global network
