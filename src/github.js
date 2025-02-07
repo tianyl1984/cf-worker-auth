@@ -60,12 +60,14 @@ async function _getUserInfo(env, accessToken) {
 		method: 'GET',
 		headers: {
 			'Accept': 'application/json',
-			'Authorization': `token ${accessToken}`
+			'Authorization': `token ${accessToken}`,
+			'User-Agent': 'CFAuth',
 		}
 	});
-	const text = await resp.text();
-	console.log(text);
-	return JSON.parse(text);
+	return resp.json();
+	// const text = await resp.text();
+	// console.log(text);
+	// return JSON.parse(text);
 }
 
 async function _getAccessToken(env, code, redirectUri) {
@@ -74,6 +76,7 @@ async function _getAccessToken(env, code, redirectUri) {
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json',
+			'User-Agent': 'CFAuth',
 		},
 		body: JSON.stringify({
 			client_id: env.GITHUB_CLIENT_ID,
