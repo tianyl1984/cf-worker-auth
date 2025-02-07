@@ -1,0 +1,13 @@
+{
+  "name": "cf-worker-auth",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev --env=dev",
+    "start": "wrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "3.42.0"
+  }
+}
