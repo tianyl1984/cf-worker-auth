@@ -59,11 +59,11 @@ async function _checkCallback(env, callback) {
 }
 
 async function _getGithubLoginUrl(req, env, ctx) {
+	const url = new URL(req.url);
 	const state = util.genUUID();
 	const cb = url.searchParams.get('callback');
 	await _saveCallback(env, state, cb);
 	const clientId = env.GITHUB_CLIENT_ID;
-	const url = new URL(req.url);
 	const uri = encodeURIComponent(`https://${url.host}/github/auth`);
 	return `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${uri}&scope=user&state=${state}`;
 }
