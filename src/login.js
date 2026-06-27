@@ -1,8 +1,8 @@
-import util from './util.js';
+import util from "./util.js";
 
 async function handle(req, env, ctx) {
 	const url = new URL(req.url);
-	const callback = url.searchParams.get('callback');
+	const callback = url.searchParams.get("callback");
 	await _checkCallback(env, callback);
 	const loginUrl = await _getGithubLoginUrl(req, env, ctx);
 	const html = `
@@ -41,27 +41,27 @@ async function handle(req, env, ctx) {
 		</button>
 	</body>
 	</html>
-	`
+	`;
 	return new Response(html, {
-		headers: { 'Content-Type': 'text/html' },
+		headers: { "Content-Type": "text/html" },
 	});
 }
 
 async function _checkCallback(env, callback) {
 	if (callback == null) {
-		return
+		return;
 	}
 	const cburl = new URL(decodeURIComponent(callback));
-	const hosts = await env.authdata.get('legal_domain');
-	if (!hosts.split(',').includes(cburl.host)) {
-		throw new Error('callback error!');
+	const hosts = await env.authdata.get("legal_domain");
+	if (!hosts.split(",").includes(cburl.hostname)) {
+		throw new Error("callback error!");
 	}
 }
 
 async function _getGithubLoginUrl(req, env, ctx) {
 	const url = new URL(req.url);
 	const state = util.genUUID();
-	const cb = url.searchParams.get('callback');
+	const cb = url.searchParams.get("callback");
 	await _saveCallback(env, state, cb);
 	const clientId = env.GITHUB_CLIENT_ID;
 	const uri = encodeURIComponent(`https://${url.host}/github/auth`);
@@ -70,7 +70,7 @@ async function _getGithubLoginUrl(req, env, ctx) {
 
 async function _saveCallback(env, state, cb) {
 	if (cb == null) {
-		return
+		return;
 	}
 	await env.authdata.put(`callback-${state}`, cb, {
 		expirationTtl: 1 * 60 * 60,
@@ -78,5 +78,5 @@ async function _saveCallback(env, state, cb) {
 }
 
 export default {
-	handle
-}
+	handle,
+};
