@@ -1,5 +1,6 @@
 import login from './login.js';
 import github from './github.js';
+import user from './user.js';
 
 export default {
 	async fetch(request, env, ctx) {
@@ -20,6 +21,9 @@ async function _handle(req, env, ctx) {
 	}
 	if (url.pathname === '/github/auth') {
 		return github.handle(req, env, ctx);
+	}
+	if (url.pathname === '/userinfo') {
+		return user.handle(req, env, ctx);
 	}
 	return new Response(`Hello`);
 }
