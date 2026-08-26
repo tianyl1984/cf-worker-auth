@@ -4,6 +4,18 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'bun.lock'
+      - 'wrangler.toml'
+      - '.github/workflows/build.yml'
+  workflow_dispatch:
+
+# 建 Deployment 和上报状态需要 deployments 写权限
+permissions:
+  contents: read
+  deployments: write
 
 jobs:
   deploy:
@@ -12,8 +24,21 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      # 建 Deployment 并置为 in_progress，deployment_status 事件会推给 /api/githubWebhook
+      - name: Create GitHub deployment
+        id: deployment
+        uses: chrnorm/deployment-action@v2
+        with:
+          token: ${{ github.token }}
+          environment: production
+          production-environment: true
+          initial-status: in_progress
+          description: 开始部署
+          log-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          # 有自定义域名时填上，会作为 environment_url 一起推过来
+          # environment-url: https://xxx.workers.dev
       - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
       - name: Install dependencies
@@ -22,3 +47,15 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          packageManager: bun
+      # 无论成功失败都要收尾，否则 Deployment 会一直卡在 in_progress
+      - name: Update deployment status
+        if: always() && steps.deployment.outputs.deployment_id != ''
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: ${{ github.token }}
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+          log-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          # GitHub 没有 cancelled 状态，取消按 inactive 上报
+          state: ${{ job.status == 'success' && 'success' || job.status == 'cancelled' && 'inactive' || 'failure' }}
+          description: ${{ job.status == 'success' && '部署成功' || job.status == 'cancelled' && '部署已取消' || '部署失败' }}
