@@ -85,8 +85,12 @@ GitHub OAuth 回调地址，由 GitHub 在用户授权后自动调用，**业务
 
 | 键             | 说明                                                  | 示例                          |
 | -------------- | ----------------------------------------------------- | ----------------------------- |
-| `legal_domain` | 允许的业务回调域名白名单，逗号分隔                     | `xxx.xxx.com,yyy.yyy.com`     |
+| `legal_domain` | 允许的业务回调域名白名单，逗号分隔，支持 `*` 通配符     | `xxx.xxx.com,*.abc.com`       |
 | `legal_user`   | 允许登录的 GitHub 用户名（login）白名单，逗号分隔      | `octocat,torvalds`            |
+
+`*` 可匹配零个或多个任意字符（包括 `.`），匹配范围为完整 hostname，不包含端口和路径。
+例如配置 `*.abc.com` 后，`a.abc.com`、`b.abc.com` 和 `a.b.abc.com` 均可作为回调域名，
+但 `abc.com`、`a.abc.com.evil.com` 不会匹配。如需允许根域名，可配置 `abc.com,*.abc.com`。
 
 > 运行期间服务还会自动写入临时键：`callback-<state>`（1 小时）、`token-<token>`（10 分钟），无需手动维护。
 

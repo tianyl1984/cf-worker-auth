@@ -53,7 +53,12 @@ async function _checkCallback(env, callback) {
 	}
 	const cburl = new URL(decodeURIComponent(callback));
 	const hosts = await env.authdata.get("legal_domain");
-	if (!hosts.split(",").includes(cburl.hostname)) {
+	const allowed = hosts.split(",").some(host => {
+		// Escape regular expression syntax so only * acts as a wildcard.
+		const pattern = host.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*");
+		return new RegExp(`^${pattern}$`).test(cburl.hostname);
+	});
+	if (!allowed) {
 		throw new Error("callback error!");
 	}
 }
