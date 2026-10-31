@@ -19,8 +19,9 @@ async function handle(req, env, ctx) {
 	if (cb == null) {
 		console.log('没有回调，返回首页');
 	} else {
-		// cb 暂不支持参数
-		jumpUrl = `${cb}?token=${token}`;
+		const callbackUrl = new URL(cb);
+		callbackUrl.searchParams.set('token', token);
+		jumpUrl = callbackUrl.toString();
 	}
 	return new Response(null, {
 		status: 302,

@@ -34,7 +34,7 @@
 | ---------- | ---- | -------------------------------------------------------------------- |
 | `callback` | 否   | 登录成功后跳回的业务地址（需 URL 编码）。其 host 必须在 `legal_domain` 白名单内。不传则登录后跳回首页。 |
 
-登录成功后会 302 跳转到 `callback?token=<token>`。
+登录成功后会 302 跳转到回调地址，并添加 `token=<token>` 查询参数。已有查询参数和片段（`#...`）会保留；如果已有同名 `token` 参数，则替换为新 token。例如 `http://127.0.0.1:45371/api/auth/callback?state=abc` 会跳转到 `http://127.0.0.1:45371/api/auth/callback?state=abc&token=<token>`。
 
 ### `GET /github/auth`
 
